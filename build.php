@@ -21,7 +21,6 @@ remove_recursive($target);
 copy_recursive("$root/src", $target);
 write_file("$target/adminer/adminer.php", $adminer);
 extract_static("$target/adminer", $adminer);
-copy_file("$target/adminer/adminer.svg", "$target/adminer.svg"); // install.json reads the icon next to itself
 copy_file("$root/README.md", "$target/README.md");
 copy_file("$root/LICENSE", "$target/LICENSE");
 
