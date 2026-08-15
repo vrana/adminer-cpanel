@@ -1,3 +1,6 @@
+## Adminer for cPanel 6.0.2
+- Let the browser cache Adminer stylesheet, scripts and logo by serving them as files
+
 ## Adminer for cPanel 6.0.1
 - Add Adminer to the Databases group of cPanel, installed and removed by one command as root
 - Bind the icon to a cPanel feature so that it can be enabled for a single package

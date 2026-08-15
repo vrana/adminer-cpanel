@@ -37,9 +37,9 @@ for theme in $themes; do
 	echo "Installing into $theme/adminer"
 	rm -rf "$theme/adminer"
 	mkdir -p "$theme/adminer"
-	cp "$SOURCE/adminer/"* "$theme/adminer/"
-	chmod 755 "$theme/adminer"
-	chmod 644 "$theme/adminer/"*
+	cp -r "$SOURCE/adminer/." "$theme/adminer/" # -r for static/
+	find "$theme/adminer" -type d -exec chmod 755 {} +
+	find "$theme/adminer" -type f -exec chmod 644 {} +
 done
 
 echo "Registering the icon"

@@ -41,6 +41,16 @@ class AdminerCpanel extends Adminer\Plugin {
 		}
 	}
 
+	/** Point Adminer at the files build.php wrote next to it
+	*
+	* cpsrvd sends everything a page of the cPanel interface generates with no-store, so
+	* Adminer serving its own stylesheet and scripts means downloading them again on
+	* every page. As files in this directory cpsrvd caches them for two months.
+	*/
+	function assetUrl($file) {
+		return "static/$file?version=" . Adminer\VERSION;
+	}
+
 	/** Don't check for a new version
 	*
 	* The account cannot install one - the plugin is updated by whoever runs the server,
