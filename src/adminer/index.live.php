@@ -7,6 +7,11 @@
 
 require_once __DIR__ . '/cpanel.inc.php';
 
+// cpsrvd waits for the page to make this connection and only gives up after a couple
+// of seconds, which it spends on every request not needing cPanel for anything else -
+// the ones serving Adminer's stylesheet and scripts above all
+cpanel_liveapi();
+
 cpanel_session_path(); // before Adminer starts the session
 
 // Start in the language of the cPanel interface. Adminer looks at this cookie first,
