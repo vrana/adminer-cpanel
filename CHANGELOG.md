@@ -1,4 +1,5 @@
 ## Adminer for cPanel 6.0.2
+- Look like cPanel by bundling Adminer's cpanel design
 - Let the browser cache Adminer stylesheet, scripts and logo by serving them as files
 
 ## Adminer for cPanel 6.0.1

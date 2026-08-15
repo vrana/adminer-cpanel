@@ -6,6 +6,10 @@
 // Adminer is downloaded from adminer.org, the current release unless a version is
 // given, so nothing but PHP and tar is needed to build.
 
+// the design making Adminer look like cPanel, used through AdminerCpanel::css()
+const DESIGN_URL = 'https://raw.githubusercontent.com/vrana/adminer/main/designs/cpanel/adminer.css';
+const DESIGN_MARKER = '/* Adminer design cpanel */';
+
 $root = __DIR__;
 list($url, $version) = adminer_release($argv[1] ?? '');
 $name = "adminer-cpanel-$version";
@@ -16,11 +20,14 @@ $dist = "$root/dist";
 $target = "$dist/$dir";
 
 echo "Building $name from $url\n";
-$adminer = download($url);
+$adminer = download($url, '<?php');
 remove_recursive($target);
 copy_recursive("$root/src", $target);
 write_file("$target/adminer/adminer.php", $adminer);
 extract_static("$target/adminer", $adminer);
+// the designs are in the repository, not on adminer.org
+//! download it from "v$version" once 6.0.2 is released, 6.0.1 does not carry the design yet
+write_file("$target/adminer/adminer.css", download(DESIGN_URL, DESIGN_MARKER));
 copy_file("$root/README.md", "$target/README.md");
 copy_file("$root/LICENSE", "$target/LICENSE");
 
@@ -97,10 +104,12 @@ function extract_static(string $dir, string $adminer): void {
 	unlink($runner);
 }
 
-/** Download a file, failing on anything which is not the expected PHP */
-function download(string $url): string {
+/** Download a file, failing on anything which does not start the expected way
+* @param string $prefix what the file has to begin with, so that an error page is not bundled
+*/
+function download(string $url, string $prefix): string {
 	$file = @file_get_contents($url);
-	if ($file === false || substr($file, 0, 5) !== '<?php') {
+	if ($file === false || substr($file, 0, strlen($prefix)) !== $prefix) {
 		fail("Cannot download $url.");
 	}
 	return $file;

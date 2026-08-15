@@ -4,7 +4,8 @@ Adds [Adminer](https://www.adminer.org/) to the Databases group of cPanel, next 
 phpMyAdmin, and logs the user in without asking for a password - the same way cPanel
 logs them into its own database tool.
 
-One file of 500 kB and one icon. It touches no account, database or cPanel setting.
+One file of 500 kB, a stylesheet which makes it look like cPanel, and one icon. It
+touches no account, database or cPanel setting.
 
 ![Adminer in the Databases group of cPanel, next to phpMyAdmin](screenshot.png)
 
@@ -71,8 +72,9 @@ php build.php
 ```
 
 Produces `dist/adminer-cpanel-<version>.tar.gz` from `src/` plus the compiled
-`adminer.php`, downloaded from adminer.org. Builds the current release; pass a version
-as an argument for a different one. Nothing beyond PHP and `tar` is needed.
+`adminer.php`, downloaded from adminer.org, and the `cpanel` design, downloaded from
+Adminer's repository. Builds the current release; pass a version as an argument for a
+different one. Nothing beyond PHP and `tar` is needed.
 
 ## For hosting providers
 
@@ -83,9 +85,11 @@ The case for offering this alongside phpMyAdmin, or instead of it:
   in the same file and more with plugins: Elasticsearch, MongoDB, Redis and ClickHouse.
 - **One file instead of 4308.** That is what the phpMyAdmin 5.2.3 you ship comes to,
   in 844 directories and 71 MB; Adminer is a single 508 kB file.
-- **You own how it looks and behaves.** The appearance is one CSS file and behavior
-  extends through small plugin files, so hiding system databases, logging queries or
-  adding login restrictions is a file you drop in - and one my updates do not touch.
+- **It already looks like cPanel.** The bundled design takes its colors, fonts, cards
+  and buttons from Jupiter's own stylesheets, so it does not read as a foreign tool
+  bolted on. The appearance is that one CSS file and behavior extends through small
+  plugin files, so hiding system databases, logging queries or adding login
+  restrictions is a file you drop in - and one my updates do not touch.
 - **Nothing to negotiate.** Apache 2.0 or GPL 2.0, same as Adminer.
 
 Questions, or something breaking on your fleet:

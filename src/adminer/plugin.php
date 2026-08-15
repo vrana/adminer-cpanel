@@ -51,6 +51,19 @@ class AdminerCpanel extends Adminer\Plugin {
 		return "static/$file?version=" . Adminer\VERSION;
 	}
 
+	/** Use the design which makes Adminer look like cPanel
+	*
+	* Adminer's own lookup would only find the file if the current directory happened to
+	* be this one, which is cpsrvd's to decide. The checksum is what busts the two-month
+	* cache: the design is versioned with Adminer but does not change with it.
+	*
+	* 'light' the same way Adminer classifies a design without a prefers-color-scheme
+	* block - it is what turns Adminer's dark mode off, as cPanel has none.
+	*/
+	function css() {
+		return array('adminer.css?v=' . crc32((string) file_get_contents(__DIR__ . '/adminer.css')) => 'light');
+	}
+
 	/** Don't check for a new version
 	*
 	* The account cannot install one - the plugin is updated by whoever runs the server,
