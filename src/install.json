@@ -1,0 +1,15 @@
+[
+    {
+        "type": "link",
+        "id": "adminer",
+        "name": "Adminer",
+        "description": "Manage the databases of this account",
+        "group_id": "databases",
+        "order": 10000,
+        "icon": "adminer.svg",
+        "uri": "adminer/index.live.php?username=",
+        "target": "_self",
+        "feature": "adminer",
+        "searchtext": "adminer database mysql mariadb postgresql sql"
+    }
+]
