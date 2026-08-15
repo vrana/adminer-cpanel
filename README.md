@@ -20,6 +20,11 @@ The icon is bound to a cPanel feature named `adminer`, so it stays hidden until 
 enable it in **WHM › Packages › Feature Manager**. That is deliberate: you can put
 it on one package first and leave every other account untouched.
 
+To update, run the same command with a newer archive - it replaces the files in place.
+Adminer's own version check is switched off here: the account holder cannot install a
+new version, so an offer to update would be noise, and it saves every account from
+calling adminer.org on each page.
+
 To remove it, run `uninstall.sh` from the same unpacked directory.
 
 ## Logging in

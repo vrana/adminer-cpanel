@@ -41,6 +41,15 @@ class AdminerCpanel extends Adminer\Plugin {
 		}
 	}
 
+	/** Don't check for a new version
+	*
+	* The account cannot install one - the plugin is updated by whoever runs the server,
+	* through install.sh - so an offer to update is noise to the person seeing it.
+	*/
+	function verifyVersion() {
+		return false;
+	}
+
 	// the languages Adminer and cPanel have in common; machine translations except cs
 	protected $translations = array(
 		'ar' => array('' => 'تسجيل دخول تلقائي بحساب cPanel الخاص بك'),
