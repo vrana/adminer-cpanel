@@ -6,6 +6,8 @@ logs them into its own database tool.
 
 One file of 500 kB and one icon. It touches no account, database or cPanel setting.
 
+![Adminer in the Databases group of cPanel, next to phpMyAdmin](screenshot.png)
+
 ## Install
 
 Download the archive from the
