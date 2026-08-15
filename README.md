@@ -83,10 +83,10 @@ The case for offering this alongside phpMyAdmin, or instead of it:
   in the same file and more with plugins: Elasticsearch, MongoDB, Redis and ClickHouse.
 - **One file instead of 4308.** That is what the phpMyAdmin 5.2.3 you ship comes to,
   in 844 directories and 71 MB; Adminer is a single 508 kB file.
-- **You own how it looks and behaves.** The appearance is one CSS file and behaviour
+- **You own how it looks and behaves.** The appearance is one CSS file and behavior
   extends through small plugin files, so hiding system databases, logging queries or
   adding login restrictions is a file you drop in - and one my updates do not touch.
-- **Nothing to negotiate.** Apache 2.0 or GPL 2, same as Adminer.
+- **Nothing to negotiate.** Apache 2.0 or GPL 2.0, same as Adminer.
 
 Questions, or something breaking on your fleet:
 [github.com/vrana/adminer-cpanel/issues](https://github.com/vrana/adminer-cpanel/issues).
@@ -96,7 +96,3 @@ Questions, or something breaking on your fleet:
 Tested on cPanel & WHM 11.136 on Ubuntu 24.04: the icon, the Feature Manager toggle,
 the installer and the automatic login all work there on a stock account. Only the
 Jupiter theme has been tried.
-
-## License
-
-Apache License 2.0 or GPL 2, the same as Adminer.
