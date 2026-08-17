@@ -33,10 +33,22 @@ lives in the repository rather than on adminer.org, so it comes from raw.githubu
 
 ## How the login works
 
-The credentials are the database user of the cPanel session. UAPI
-`Session::create_temp_user` has cPanel create it and returns its name; the password is
-`SESSION_TEMP_PASS` from the environment. `~/.my.cnf` is the fallback when that call is
-unavailable, and Adminer's own login form the fallback after that.
+**cPanel offers two different credentials, and which one arrives depends on how the
+user logged in.** `Cgi::phpmyadminlink` says it outright: cPanel creates a temporary
+database user *"when they login without the user/pass combination for the cPanel
+account"*. So:
+
+- **From WHM, or by SSO** — cPanel does not know the account's password, so it mints a
+  session database user and exports `SESSION_TEMP_USER` / `SESSION_TEMP_PASS`.
+- **Logging in to cPanel directly**, which is what nearly every user does — no
+  temporary user is created at all, and `REMOTE_PASSWORD` carries the account's own
+  password instead.
+
+`cpanel_credentials()` tries the temporary user first, the account second, `~/.my.cnf`
+third, and leaves Adminer's own login form as the last fallback.
+
+Testing only from WHM hides half of this and makes the temporary user look like the
+only way in - it is how auto-login shipped broken for every real user once.
 
 **The call returns the name only the first time.** Once the user exists it answers
 `created => 0` with no name at all, which is not a failure — so `cpanel_temp_user()`
@@ -80,11 +92,18 @@ Established on a live server, and worth not re-deriving:
 - **`SESSION_TEMP_USER` is not a database user** — it is the *input* to
   `Session::create_temp_user`, which turns it into one. `SESSION_TEMP_PASS` beside it
   *is* that user's password. Both are in `$_ENV` for a plugin page.
-- `REMOTE_USER` is the account name. `REMOTE_PASSWORD` arrives empty, and
-  `REMOTE_DBOWNER` is absent: that pair is how the bundled phpMyAdmin authenticates
-  (`AuthenticationCpanel::readCredentials()`), and cpsrvd fills it in only for its own
-  applications under `base/3rdparty/`, reached through `Cgi::phpmyadminlink`. Chasing
-  that route wastes a day — `Session::create_temp_user` is the supported way in.
+- `REMOTE_USER` is the account name. **`REMOTE_PASSWORD` does arrive** for a plugin page
+  on a direct login — it is the account's cPanel password, and the pair the bundled
+  phpMyAdmin authenticates with (`AuthenticationCpanel::readCredentials()`). Only
+  `REMOTE_DBOWNER` is withheld: cpsrvd fills that in for its own applications under
+  `base/3rdparty/` and not for a plugin, so fall back to `REMOTE_USER`, which differs
+  from it just where a database was moved between accounts. Relocating the plugin to
+  `base/3rdparty/` to get it is not worth it — anything there is cPanel's to overwrite
+  on update.
+- `SESSION_TEMP_USER` and `SESSION_TEMP_PASS` are in `$_ENV` **only for a session opened
+  from WHM or by SSO**. A direct login carries neither, and there is no way to mint them:
+  `SETUP_TEMP_SESSION` refuses a token that is not already linked to the session, and
+  UAPI `Session::create_temp_user` returns nothing unless `SESSION_TEMP_USER` is set.
 - `bin/cpses_tool` is `rwx------ root`, so nothing there is callable by the account.
 - Sessions work: `session.save_path` is empty but `sys_get_temp_dir()` is the
   account's `~/tmp` and is writable. `cpanel_session_path()` sets it explicitly anyway.

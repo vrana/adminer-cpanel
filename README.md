@@ -40,10 +40,13 @@ and none is stored. Step by step:
    account you are before the page even starts.
 3. The icon's link ends in `?username=` - a deliberately empty name, which Adminer
    reads as "log me in as this account".
-4. Adminer asks cPanel for a database login. cPanel creates a **temporary database
-   user** for you, with access to your databases and nothing else.
-5. The password for that user is already among the information cPanel hands to the
-   page, so Adminer never has to invent one or ask you for one.
+4. Adminer asks cPanel for a database login, and takes whichever of the two cPanel
+   offers. Opening cPanel from WHM or through single sign-on gets a **temporary
+   database user**, created for that session with access to your databases and nothing
+   else. Logging in to cPanel directly gets your **own database login** instead - the
+   same one cPanel hands to its own database tools.
+5. Either way the password is already among the information cPanel hands to the page,
+   so Adminer never has to invent one or ask you for one.
 6. Adminer puts the real user name into the address bar and reloads, so every link
    from there on carries it.
 7. Adminer notes in its own session that you are logged in - it records *that* you
@@ -54,12 +57,13 @@ and none is stored. Step by step:
    to disk or stored in a cookie.
 10. If you log out, the user name drops out of the address bar and Adminer shows its
     ordinary login form.
-11. When your cPanel session ends, cPanel deletes the temporary database user - so
-    even a copied password stops working.
+11. When your cPanel session ends, cPanel deletes the temporary database user, where
+    one was created - so even a copied password stops working.
 
-Steps 4 and 11 are the ones worth knowing: the credential reaches one account only and
-expires with the session. That is not something invented here - it is the arrangement
-cPanel uses for its own database tool, offered through the documented UAPI function
+Step 4 is the one worth knowing: the credential reaches one account only, and where it
+is a temporary user it also expires with the session. Neither is invented here - both
+are the arrangements cPanel uses for its own database tool, the temporary user through
+the documented UAPI function
 [`Session::create_temp_user`](https://go.cpanel.net/create_temp_user).
 
 If the account has a `~/.my.cnf`, its `[client]` section is used instead when that call

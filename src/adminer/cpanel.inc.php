@@ -34,28 +34,36 @@ function cpanel_session_path(): void {
 
 /** Get the database credentials of the logged in account
 *
-* Two ways, in this order:
+* Three ways, in this order:
 *
 * 1. The database user of the cPanel session. UAPI Session::create_temp_user has the
 *    account's own temporary user created and returns its name (cpses_ + the first two
 *    letters of the account + SESSION_TEMP_USER); the password is SESSION_TEMP_PASS
 *    from the environment. It is granted the account's databases and dropped with the
 *    cPanel session, so nothing outlives the session and no password is stored.
-* 2. The [client] section of ~/.my.cnf, for the case that call is unavailable. cPanel
-*    does not write that file, but a host can, and a plugin page runs as the account
-*    so the file is ours to read.
+* 2. The account itself, through REMOTE_PASSWORD - the same pair the bundled phpMyAdmin
+*    logs in with. cPanel creates the temporary user of step 1 only for a session whose
+*    password it does not know, which means one opened from WHM or by SSO; a user
+*    logging in to cPanel directly, as nearly all of them do, gets none and this is the
+*    only way in. The owner is REMOTE_DBOWNER where cPanel provides it - only under
+*    base/3rdparty/, not for a plugin - and the account name otherwise; the two differ
+*    just where a database was moved between accounts.
+* 3. The [client] section of ~/.my.cnf. cPanel does not write that file, but a host can,
+*    and a plugin page runs as the account so the file is ours to read.
 *
-* Not REMOTE_DBOWNER / REMOTE_PASSWORD, which is how the bundled phpMyAdmin logs in:
-* cpsrvd fills those in only for its own applications under base/3rdparty/. Not
-* SESSION_TEMP_USER on its own either - that is the input to the call above, not a
+* Not SESSION_TEMP_USER on its own - that is the input to the call in step 1, not a
 * database user.
 *
 * @return ?array{server: string, username: string, password: string} null when
-*     neither way worked and Adminer should ask for the credentials itself
+*     no way worked and Adminer should ask for the credentials itself
 */
 function cpanel_credentials(): ?array {
 	$password = cpanel_env('SESSION_TEMP_PASS');
 	$username = ($password !== '' ? cpanel_temp_user() : '');
+	if ($username === '') {
+		$password = cpanel_env('REMOTE_PASSWORD');
+		$username = ($password !== '' ? (cpanel_env('REMOTE_DBOWNER') ?: cpanel_env('REMOTE_USER')) : '');
+	}
 	if ($username === '') {
 		$home = cpanel_env('HOME');
 		$found = ($home !== '' ? cpanel_my_cnf("$home/.my.cnf") : null);
