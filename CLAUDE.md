@@ -17,7 +17,7 @@ provider is meant to land on.
 
 | Path | What it is |
 | --- | --- |
-| `src/install.json` | The cPanel icon: `databases` group, `adminer` feature, points at `adminer/index.live.php`. |
+| `src/install.json` | The cPanel icon: `databases` group, `adminer` feature, `_blank` target, points at `adminer/index.live.php`. |
 | `src/install.sh`, `src/uninstall.sh` | Run as root on the server; copy the app into every theme under `/usr/local/cpanel/base/frontend/` and call `install_plugin`. |
 | `src/adminer/index.live.php` | Entry point. `.live.php` is what makes cpsrvd execute it inside the authenticated session. |
 | `src/adminer/cpanel.inc.php` | Everything that talks to cPanel. Global namespace, `cpanel_` prefix, because it is included before Adminer. |

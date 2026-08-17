@@ -1,5 +1,6 @@
 ## Adminer for cPanel 6.0.2
 - Log in automatically also when the account logs in to cPanel directly, which creates no temporary database user
+- Open Adminer in a new tab, the same way cPanel opens phpMyAdmin
 - Look like cPanel by bundling Adminer's cpanel design
 - Unregister the service workers left behind by the previous cPanel sessions
 
