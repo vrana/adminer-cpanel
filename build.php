@@ -24,7 +24,6 @@ $adminer = download($url, '<?php');
 remove_recursive($target);
 copy_recursive("$root/src", $target);
 write_file("$target/adminer/adminer.php", $adminer);
-extract_static("$target/adminer", $adminer);
 // the designs are in the repository, not on adminer.org
 //! download it from "v$version" once 6.0.2 is released, 6.0.1 does not carry the design yet
 write_file("$target/adminer/adminer.css", download(DESIGN_URL, DESIGN_MARKER));
@@ -70,38 +69,6 @@ function adminer_release(string $version): array {
 	}
 	// the redirect is relative to the site root
 	return array('https://www.adminer.org/' . ltrim($location, '/'), $match[1]);
-}
-
-/** Write the files Adminer would otherwise serve itself next to it
-*
-* cpsrvd forbids caching anything a page of the cPanel interface generates, so Adminer
-* serving its own stylesheet and scripts means downloading them again on every page.
-* As files in the plugin directory they are cached for two months instead - see
-* AdminerCpanel::assetUrl(), which is what points Adminer at them.
-*
-* @param string $dir directory of adminer.php, the files go to its static/
-* @param string $adminer contents of adminer.php
-*/
-function extract_static(string $dir, string $adminer): void {
-	if (!strpos($adminer, 'assetUrl(')) {
-		// before Adminer 6.0.2 the URLs are built in place and nothing would use these
-		echo "This Adminer has no assetUrl(), leaving it to serve its files itself.\n";
-		return;
-	}
-	// each file has to be fetched by its own process, Adminer exits after serving one
-	$runner = "$dir/../extract-static.php";
-	write_file($runner, '<?php $_GET = array("file" => $argv[2]); include $argv[1];' . "\n");
-	mkdir("$dir/static", 0755);
-	foreach (array('default.css', 'dark.css', 'functions.js', 'jush.js', 'logo.png') as $file) {
-		$command = escapeshellarg(PHP_BINARY) . " -d zlib.output_compression=0 "
-			. escapeshellarg($runner) . " " . escapeshellarg("$dir/adminer.php") . " " . escapeshellarg($file);
-		$content = shell_exec($command);
-		if (!$content) {
-			fail("Cannot get $file out of adminer.php.");
-		}
-		write_file("$dir/static/$file", $content);
-	}
-	unlink($runner);
 }
 
 /** Download a file, failing on anything which does not start the expected way

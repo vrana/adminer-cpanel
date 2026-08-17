@@ -41,14 +41,25 @@ class AdminerCpanel extends Adminer\Plugin {
 		}
 	}
 
-	/** Point Adminer at the files build.php wrote next to it
+	/** Unregister the service workers left behind by the previous cPanel sessions
 	*
-	* cpsrvd sends everything a page of the cPanel interface generates with no-store, so
-	* Adminer serving its own stylesheet and scripts means downloading them again on
-	* every page. As files in this directory cpsrvd caches them for two months.
+	* Adminer registers one for the path it runs on and unregisters it after logging out of
+	* the last connection. cPanel mints a new cpsess token per session, so a session ending
+	* any other way - a closed tab, an expired cPanel login - leaves a registration on a
+	* path nothing will ever request again, together with its files in the Cache Storage
+	* which the whole origin shares. Nothing wakes that worker, so only a page of a later
+	* session can clean up after it.
+	*
+	* Swept are the paths differing from this one in the token alone, so another Adminer on
+	* the same origin is left alone.
+	*
+	* A file rather than an inline script so that cpsrvd caches it instead of sending it
+	* with every page; the checksum busts that cache the same way as in css(). Deferred
+	* because it only cleans up after sessions which are already over. Returning null lets
+	* Adminer print its own <head> too.
 	*/
-	function assetUrl($file) {
-		return "static/$file?version=" . Adminer\VERSION;
+	function head($dark = null) {
+		echo Adminer\script_src('cpanel.js?v=' . crc32((string) file_get_contents(__DIR__ . '/cpanel.js')), true);
 	}
 
 	/** Use the design which makes Adminer look like cPanel

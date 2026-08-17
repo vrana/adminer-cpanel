@@ -37,7 +37,7 @@ for theme in $themes; do
 	echo "Installing into $theme/adminer"
 	rm -rf "$theme/adminer"
 	mkdir -p "$theme/adminer"
-	cp -r "$SOURCE/adminer/." "$theme/adminer/" # -r for static/
+	cp -r "$SOURCE/adminer/." "$theme/adminer/"
 	find "$theme/adminer" -type d -exec chmod 755 {} +
 	find "$theme/adminer" -type f -exec chmod 644 {} +
 done

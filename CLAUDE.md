@@ -22,6 +22,7 @@ provider is meant to land on.
 | `src/adminer/index.live.php` | Entry point. `.live.php` is what makes cpsrvd execute it inside the authenticated session. |
 | `src/adminer/cpanel.inc.php` | Everything that talks to cPanel. Global namespace, `cpanel_` prefix, because it is included before Adminer. |
 | `src/adminer/plugin.php` | `AdminerCpanel`, an ordinary Adminer plugin. Included *inside* `adminer_object()` — `Adminer\Plugin` does not exist before that. |
+| `src/adminer/cpanel.js` | Unregisters the service workers of the previous cPanel sessions. A file so cpsrvd caches it; `AdminerCpanel::head()` links it. |
 | `build.php` | Assembles `dist/adminer-cpanel-<version>.tar.gz`. |
 
 `src/adminer/adminer.php` is not in the repository; `build.php` downloads it from

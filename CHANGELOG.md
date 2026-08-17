@@ -1,6 +1,6 @@
 ## Adminer for cPanel 6.0.2
 - Look like cPanel by bundling Adminer's cpanel design
-- Let the browser cache Adminer stylesheet, scripts and logo by serving them as files
+- Unregister the service workers left behind by the previous cPanel sessions
 
 ## Adminer for cPanel 6.0.1
 - Add Adminer to the Databases group of cPanel, installed and removed by one command as root
