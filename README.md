@@ -96,6 +96,9 @@ The case for offering this alongside phpMyAdmin, or instead of it:
   restrictions is a file you drop in - and one my updates do not touch.
 - **Nothing to negotiate.** Apache 2.0 or GPL 2.0, same as Adminer.
 
+[exon.io](https://www.exon.io/) is the first provider to run it, trying it on part
+of their cPanel fleet - [their post](https://x.com/exon/status/2097425650730553681).
+
 Questions, or something breaking on your fleet:
 [github.com/vrana/adminer-cpanel/issues](https://github.com/vrana/adminer-cpanel/issues).
 
