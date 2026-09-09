@@ -28,8 +28,8 @@ provider is meant to land on.
 `src/adminer/adminer.php` is not in the repository; `build.php` downloads it from
 adminer.org, following the redirect of `latest.php` to learn which release is current.
 Neither is `src/adminer/adminer.css`: that is Adminer's bundled `cpanel` design, which
-lives in the repository rather than on adminer.org, so it comes from raw.githubusercontent.com
-— from `main` until 6.0.2 is released, because 6.0.1 predates the design.
+lives in the repository rather than on adminer.org, so it comes from raw.githubusercontent.com,
+from the `v<VERSION>` tag of the release being built.
 
 ## How the login works
 

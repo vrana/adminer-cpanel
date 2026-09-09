@@ -7,7 +7,7 @@
 // given, so nothing but PHP and tar is needed to build.
 
 // the design making Adminer look like cPanel, used through AdminerCpanel::css()
-const DESIGN_URL = 'https://raw.githubusercontent.com/vrana/adminer/main/designs/cpanel/adminer.css';
+const DESIGN_URL = 'https://raw.githubusercontent.com/vrana/adminer/v%s/designs/cpanel/adminer.css';
 const DESIGN_MARKER = '/* Adminer design cpanel */';
 
 $root = __DIR__;
@@ -24,9 +24,8 @@ $adminer = download($url, '<?php');
 remove_recursive($target);
 copy_recursive("$root/src", $target);
 write_file("$target/adminer/adminer.php", $adminer);
-// the designs are in the repository, not on adminer.org
-//! download it from "v$version" once 6.0.2 is released, 6.0.1 does not carry the design yet
-write_file("$target/adminer/adminer.css", download(DESIGN_URL, DESIGN_MARKER));
+// the designs are in the repository, not on adminer.org, so it comes from the release tag
+write_file("$target/adminer/adminer.css", download(sprintf(DESIGN_URL, $version), DESIGN_MARKER));
 copy_file("$root/README.md", "$target/README.md");
 copy_file("$root/LICENSE", "$target/LICENSE");
 
