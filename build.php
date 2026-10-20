@@ -66,8 +66,8 @@ function adminer_release(string $version): array {
 	if (!preg_match('~adminer-([\w.-]+)\.php$~', $location, $match)) {
 		fail("adminer.org did not say which release is current. Pass a version as an argument.");
 	}
-	// the redirect is relative to the site root
-	return array('https://www.adminer.org/' . ltrim($location, '/'), $match[1]);
+	// the redirect goes to GitHub, it used to be relative to the site root
+	return array((preg_match('~^https?://~', $location) ? $location : 'https://www.adminer.org/' . ltrim($location, '/')), $match[1]);
 }
 
 /** Download a file, failing on anything which does not start the expected way
